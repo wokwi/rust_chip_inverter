@@ -1,0 +1,10 @@
+{
+  "name": "Inverter",
+  "author": "Uri Shaked",
+  "pins": [
+    "OUT",
+    "IN",
+    "VCC",
+    "GND"
+  ]
+}

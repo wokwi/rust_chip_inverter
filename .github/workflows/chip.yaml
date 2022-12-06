@@ -1,0 +1,36 @@
+name: Build Chip
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  chip:
+    runs-on: ubuntu-22.04
+    name: Build chip
+    steps:
+      - name: Setup | Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          default: true
+          target: wasm32-unknown-unknown
+          components: clippy, rustfmt
+          toolchain: stable
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Build | Fmt Check
+        run: cargo fmt -- --check
+      - name: Build | Clippy
+        run: cargo clippy --no-deps
+      - name: Build | Compile
+        run: cargo build --release
+      - name: Build | Copy dist files
+        run: |
+          mkdir -p dist
+          cp target/wasm32-unknown-unknown/release/chip_inverter.wasm dist/chip.wasm
+          cp wokwi-chip.json dist/chip.json
+      - name: 'Upload Artifacts'
+        uses: actions/upload-artifact@v3
+        with:
+          name: chip
+          path: dist/*

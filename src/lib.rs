@@ -7,7 +7,8 @@
 use std::ffi::{c_void, CString};
 
 use wokwi_chip_ll::{
-    debugPrint, pinInit, pinWatch, pinWrite, PinId, WatchConfig, BOTH, HIGH, INPUT, LOW, OUTPUT,
+    debugPrint, pinInit, pinRead, pinWatch, pinWrite, PinId, WatchConfig, BOTH, HIGH, INPUT, LOW,
+    OUTPUT,
 };
 
 struct Chip {
@@ -38,6 +39,9 @@ pub unsafe extern "C" fn chipInit() {
     };
     CHIP_VEC.push(chip);
     let chip = CHIP_VEC.last().unwrap();
+
+    let value = pinRead(chip.pin_in);
+    pinWrite(chip.pin_out, !value);
 
     let watch_config = WatchConfig {
         user_data: (CHIP_VEC.len() - 1) as *const c_void,

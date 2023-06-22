@@ -1,0 +1,9 @@
+[wokwi]
+version = 1
+gdbServerPort = 3333
+elf = "demo/dummy_firmware.elf"
+firmware = "demo/dummy_firmware.hex"
+
+[[chip]]
+name = 'inverter'  # To use the chip in diagram.json, add a part with "chip-inverter" type.
+binary = 'target/wasm32-unknown-unknown/release/chip_inverter.wasm'

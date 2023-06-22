@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 205.85,
+      "left": -30.2,
+      "rotate": 180,
+      "attrs": { "value": "130" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 130.8,
+      "left": -73,
+      "attrs": { "color": "red", "label": "Out" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led3",
+      "top": 130.8,
+      "left": -111.4,
+      "attrs": { "color": "green", "label": "In" }
+    },
+    { "type": "chip-inverter", "id": "chip1", "top": 202.62, "left": 62.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 163.96, "left": 230.4, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 240, "left": 191.4, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r4",
+      "top": 215.45,
+      "left": -30.2,
+      "rotate": 180,
+      "attrs": { "value": "130" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": 240, "left": -115.8, "attrs": {} },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": 119.6, "left": 31.9, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": 115.96, "left": 86.4, "attrs": {} }
+  ],
+  "connections": [
+    [ "vcc1:VCC", "chip1:VCC", "red", [ "v0" ] ],
+    [ "chip1:GND", "gnd1:GND", "black", [ "h0" ] ],
+    [ "chip1:OUT", "r1:1", "magenta", [ "h0" ] ],
+    [ "led1:A", "r1:2", "magenta", [ "h9.6", "v38.4" ] ],
+    [ "chip1:IN", "r4:1", "green", [ "h0" ] ],
+    [ "led3:A", "r4:2", "green", [ "h9.6", "v48" ] ],
+    [ "gnd2:GND", "led3:C", "black", [ "v0" ] ],
+    [ "gnd2:GND", "led1:C", "black", [ "v-38.4", "h38.4", "v-28.8" ] ],
+    [ "sw1:2", "r4:1", "green", [ "h0.1", "v67.2" ] ],
+    [ "vcc2:VCC", "sw1:3", "red", [ "v19.2", "h-38.4" ] ],
+    [ "sw1:1", "gnd2:GND", "black", [ "v48", "h-96" ] ]
+  ],
+  "dependencies": {}
+}

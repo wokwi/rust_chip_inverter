@@ -20,12 +20,14 @@ struct Chip {
 // instances, and use the user_data pointer to index into CHIP_VEC.
 static mut CHIP_VEC: Vec<Chip> = Vec::new();
 
-pub unsafe fn on_pin_change(user_data: *const c_void, _pin: PinId, value: u32) {
-    let chip = &CHIP_VEC[user_data as usize];
-    if value == HIGH {
-        pinWrite(chip.pin_out, LOW);
-    } else {
-        pinWrite(chip.pin_out, HIGH);
+pub extern "C" fn on_pin_change(user_data: *mut c_void, _pin: PinId, value: u32) {
+    unsafe {
+        let chip = &CHIP_VEC[user_data as usize];
+        if value == HIGH {
+            pinWrite(chip.pin_out, LOW);
+        } else {
+            pinWrite(chip.pin_out, HIGH);
+        }
     }
 }
 
@@ -46,7 +48,7 @@ pub unsafe extern "C" fn chipInit() {
     let watch_config = WatchConfig {
         user_data: (CHIP_VEC.len() - 1) as *const c_void,
         edge: BOTH,
-        pin_change: on_pin_change as *const c_void,
+        pin_change: on_pin_change,
     };
 
     pinWatch(chip.pin_in, &watch_config);

@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: Build chip
     steps:
       - name: Setup | Rust
@@ -17,7 +17,7 @@ jobs:
           components: clippy, rustfmt
           toolchain: stable
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Build | Fmt Check
         run: cargo fmt -- --check
       - name: Build | Clippy
@@ -27,10 +27,10 @@ jobs:
       - name: Build | Copy dist files
         run: |
           mkdir -p dist
-          cp target/wasm32-unknown-unknown/release/chip_inverter.wasm dist/chip.wasm
+          cp target/wasm32-unknown-unknown/release/chip_*.wasm dist/chip.wasm
           cp wokwi-chip.json dist/chip.json
       - name: 'Upload Artifacts'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: chip
           path: dist/*
@@ -43,14 +43,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download compiled chip
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v6
         with:
           name: chip
           path: chip
-      - name: Create a zip archive
-        run: cd chip && zip -9 ../chip.zip chip.*
+      - name: Create chip.version.txt file
+        run: echo "$ZIP_VERSION" > chip/chip.version.txt
         env:
           ZIP_VERSION: ${{ github.ref_name }}
+      - name: Create a zip archive
+        run: cd chip && zip -9 ../chip.zip chip.*
       - name: Upload release
         uses: ncipollo/release-action@v1
         with:
